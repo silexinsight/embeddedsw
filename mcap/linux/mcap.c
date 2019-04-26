@@ -34,7 +34,7 @@
 
 #include "mcap_lib.h"
 
-static const char options[] = "x:pC:rmfdvHhDa::";
+static const char options[] = "+x:p:C:rmfdvHhDa::";
 static char help_msg[] =
 "Usage: mcap [options]\n"
 "\n"
@@ -63,6 +63,8 @@ int main(int argc, char **argv)
 	int program = 0, verbose = 0, device_id = 0;
 	int data_regs = 0, dump_regs = 0, access_config = 0;
 	int programconfigfile = 0;
+	char *bitstreampath = NULL;
+	char *cbitstreampath = NULL;
 
 	while ((i = getopt(argc, argv, options)) != -1) {
 		switch (i) {
@@ -90,15 +92,17 @@ int main(int argc, char **argv)
 			return 1;
 		case 'C':
 			programconfigfile = 1;
+			cbitstreampath = optarg;
 			break;
 		case 'p':
 			program = 1;
+			bitstreampath = optarg;
 			break;
 		case 'v':
 			verbose++;
 			break;
 		case 'x':
-			device_id = (int) strtol(argv[2], NULL, 16);
+			device_id = (int) strtol(optarg, NULL, 16);
 			break;
 		default:
 			printf("%s", help_msg);
@@ -150,17 +154,14 @@ int main(int argc, char **argv)
 		if (argc > 6)
 			mdev->is_multiplebit = 1;
 
-		MCapConfigureFPGA(mdev, argv[4], EMCAP_PARTIALCONFIG_FILE);
+		MCapConfigureFPGA(mdev, cbitstreampath, EMCAP_PARTIALCONFIG_FILE);
 
 		if(!mdev->is_multiplebit)
 			goto free;
 	}
 
 	if (program) {
-		if (argc > 6)
-			MCapConfigureFPGA(mdev, argv[6], EMCAP_CONFIG_FILE);
-		else
-			MCapConfigureFPGA(mdev, argv[4], EMCAP_CONFIG_FILE);
+		MCapConfigureFPGA(mdev, bitstreampath, EMCAP_CONFIG_FILE);
 		goto free;
 	}
 
