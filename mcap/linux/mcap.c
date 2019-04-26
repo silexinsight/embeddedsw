@@ -151,7 +151,7 @@ int main(int argc, char **argv)
 	}
 
 	if (programconfigfile) {
-		if (argc > 6)
+		if (program)
 			mdev->is_multiplebit = 1;
 
 		MCapConfigureFPGA(mdev, cbitstreampath, EMCAP_PARTIALCONFIG_FILE);
