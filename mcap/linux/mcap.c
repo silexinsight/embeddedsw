@@ -34,12 +34,13 @@
 
 #include "mcap_lib.h"
 
-static const char options[] = "+x:p:C:rmfdvHhDa::";
+static const char options[] = "+x:p:i:C:rmfdvHhDa::";
 static char help_msg[] =
 "Usage: mcap [options]\n"
 "\n"
 "Options:\n"
 "\t-x\t\tSpecify MCAP Device Id in hex (MANDATORY)\n"
+"\t-i   <index>\tIndex of the MCAP devices with the same Device Id\n"
 "\t-p    <file>\tProgram Bitstream (.bin/.bit/.rbt)\n"
 "\t-C    <file>\tPartial Reconfiguration Clear File(.bin/.bit/.rbt)\n"
 "\t-r\t\tPerforms Simple Reset\n"
@@ -60,7 +61,7 @@ int main(int argc, char **argv)
 {
 	struct mcap_dev *mdev;
 	int i, modreset = 0, fullreset = 0, reset = 0;
-	int program = 0, verbose = 0, device_id = 0;
+	int program = 0, verbose = 0, device_id = 0, index = 0;
 	int data_regs = 0, dump_regs = 0, access_config = 0;
 	int programconfigfile = 0;
 	char *bitstreampath = NULL;
@@ -104,6 +105,9 @@ int main(int argc, char **argv)
 		case 'x':
 			device_id = (int) strtol(optarg, NULL, 16);
 			break;
+		case 'i':
+			index = atoi(optarg);
+			break;
 		default:
 			printf("%s", help_msg);
 			return 1;
@@ -116,7 +120,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	mdev = (struct mcap_dev *)MCapLibInit(device_id);
+	mdev = (struct mcap_dev *)MCapLibInit(device_id, index);
 	if (!mdev)
 		return 1;
 

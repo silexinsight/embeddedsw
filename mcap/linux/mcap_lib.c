@@ -357,7 +357,7 @@ void MCapLibFree(struct mcap_dev *mdev)
 	}
 }
 
-struct mcap_dev *MCapLibInit(int device_id)
+struct mcap_dev *MCapLibInit(int device_id, int index)
 {
 	struct pci_dev *dev;
 	struct mcap_dev *mdev;
@@ -385,8 +385,10 @@ struct mcap_dev *MCapLibInit(int device_id)
 
 		if (dev->vendor_id == MCAP_VENDOR_ID &&
 			dev->device_id == device_id) {
-			pr_info("Xilinx MCAP device found\n");
+			if (index--)
+				continue;
 			mdev->pdev = dev;
+			break;
 		} else {
 			continue;
 		}

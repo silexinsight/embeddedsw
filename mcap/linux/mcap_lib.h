@@ -149,7 +149,7 @@ struct mcap_dev {
 		MCAP_STS_REG_READ_COUNT_MASK) >> 5)
 
 /* Function Prototypes */
-struct mcap_dev *MCapLibInit(int device_id);
+struct mcap_dev *MCapLibInit(int device_id, int index);
 void MCapLibFree(struct mcap_dev *mdev);
 void MCapDumpRegs(struct mcap_dev *mdev);
 void MCapDumpReadRegs(struct mcap_dev *mdev);
